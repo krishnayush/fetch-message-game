@@ -40,12 +40,25 @@ bot.on('callback_query', (query) => {
 
     // Check if the button clicked is "Start Game"
     if (query.data === 'start_game') {
-        // You can trigger your backend game logic here or any other functionality
+        // Send a message with a URL button to open the game inside Telegram
         bot.sendMessage(chatId, 'Game Started! Let\'s play!');
-        // Example: Send a message about the game status
-        // Here you can connect to your backend and fetch game status
-        // Example: Send a URL to open the game within the bot (or a custom message)
-        bot.sendMessage(chatId, 'This is where the game would open or the interaction starts.');
+
+        // Add a URL button that opens your game directly inside Telegram
+        bot.sendMessage(chatId, 'Click below to play the game inside Telegram:',
+            {
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            {
+                                text: "Play Game", 
+                                web_app: { 
+                                    url: "https://your-game-url.com" // Replace with your actual game URL
+                                }
+                            }
+                        ]
+                    ]
+                }
+            });
     }
 });
 

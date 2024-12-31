@@ -52,7 +52,7 @@ bot.on('callback_query', (query) => {
                             {
                                 text: "Play Game", 
                                 web_app: { 
-                                    url: "https://your-game-url.com" // Replace with your actual game URL
+                                    url: "https://fetch-message-game.onrender.com" // Replace with your actual game URL
                                 }
                             }
                         ]

@@ -1,17 +1,30 @@
 const express = require('express');
 const cors = require('cors');
 const TelegramBot = require('node-telegram-bot-api');
+require('dotenv').config(); // Load environment variables
+
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Telegram Bot setup
-const botToken = '7368742607:AAGb-ft5DH5ynvnZnvh20DYKFzv9IKKFbFs'; // Replace with your Telegram Bot token from BotFather
-const bot = new TelegramBot(botToken, { polling: true });
+const botToken = process.env.TELEGRAM_BOT_TOKEN;
+const bot = new TelegramBot(botToken);
+
+// Set the webhook URL for your bot
+const webhookUrl = `${process.env.BACKEND_URL}/telegram-webhook`; 
+bot.setWebHook(webhookUrl);
 
 // Set up CORS
-app.use(cors());
+app.use(cors({
+    origin: 'https://frontend-0bp1.onrender.com' // Replace with your frontend URL
+}));
 
-// API endpoint to return a message (for your existing backend)
+// Root endpoint for basic check
+app.get('/', (req, res) => {
+    res.send('Backend is running!');
+});
+
+// API endpoint to return a message
 app.get('/api/message', (req, res) => {
     res.json({ message: 'Hello from the Backend!' });
 });
@@ -23,14 +36,11 @@ bot.onText(/\/start/, (msg) => {
     const options = {
         reply_markup: {
             inline_keyboard: [
-                [
-                    { text: "Start Game", callback_data: "start_game" }  // Start button
-                ]
+                [{ text: "Start Game", callback_data: "start_game" }]
             ]
         }
     };
 
-    // Send a message with a Start button
     bot.sendMessage(chatId, 'Welcome to the Game! Click the button below to start:', options);
 });
 
@@ -38,28 +48,25 @@ bot.onText(/\/start/, (msg) => {
 bot.on('callback_query', (query) => {
     const chatId = query.message.chat.id;
 
-    // Check if the button clicked is "Start Game"
     if (query.data === 'start_game') {
-        // Send a message with a URL button to open the game inside Telegram
         bot.sendMessage(chatId, 'Game Started! Let\'s play!');
-
-        // Add a URL button that opens your game directly inside Telegram
-        bot.sendMessage(chatId, 'Click below to play the game inside Telegram:',
-            {
-                reply_markup: {
-                    inline_keyboard: [
-                        [
-                            {
-                                text: "Play Game", 
-                                web_app: { 
-                                    url: "https://fetch-message-game.onrender.com" // Replace with your actual game URL
-                                }
-                            }
-                        ]
-                    ]
-                }
-            });
+        bot.sendMessage(chatId, 'Click below to play the game inside Telegram:', {
+            reply_markup: {
+                inline_keyboard: [
+                    [{
+                        text: "Play Game",
+                        web_app: { url: "https://fetch-message-game.onrender.com" } // Replace with your game URL
+                    }]
+                ]
+            }
+        });
     }
+});
+
+// Handle webhook updates from Telegram
+app.post('/telegram-webhook', (req, res) => {
+    bot.processUpdate(req.body);
+    res.sendStatus(200); // Acknowledge Telegram
 });
 
 // Start the Express server

@@ -39,11 +39,13 @@ app.use((req, res, next) => {
 
 // Root endpoint for basic check
 app.get('/', (req, res) => {
+    console.log("Root endpoint hit");
     res.send('Backend is running!');
 });
 
 // API endpoint to return a message
 app.get('/api/message', (req, res) => {
+    console.log('Received request at /api/message');
     res.json({ message: 'Hello from the Backend!' });
 });
 

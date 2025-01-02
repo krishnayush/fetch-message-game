@@ -91,7 +91,7 @@ app.post('/telegram-webhook', (req, res) => {
     }
 });
 
-// Start server
-app.listen(port, () => {
-    console.log(`Backend is running at http://localhost:${port}`);
+// Start server on the correct port
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`Backend is running at http://localhost:${process.env.PORT || 3000}`);
 });

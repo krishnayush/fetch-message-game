@@ -9,7 +9,10 @@ const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-    origin: ['https://frontend-0bp1.onrender.com', 'https://t.me'] // Add allowed origins
+    origin: [
+        'https://frontend-0bp1.onrender.com',
+        'https://t.me'
+    ]
 }));
 app.use(bodyParser.json()); // Parse JSON body from incoming requests
 

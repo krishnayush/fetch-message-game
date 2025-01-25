@@ -70,7 +70,7 @@ bot.on('callback_query', (query) => {
 
     if (query.data === 'start_game') {
         bot.sendMessage(chatId, 'Game Started! Let\'s play!');
-        bot.sendMessage(chatId, 'Click below to play the game inside Telegram:', {
+        bot.sendMessage(chatId, 'hi ayush :', {
             reply_markup: {
                 inline_keyboard: [
                     [{

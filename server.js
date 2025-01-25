@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const TelegramBot = require('node-telegram-bot-api');
+const axios = require('axios'); // Import axios
 require('dotenv').config();
 
 const app = express();
@@ -52,6 +53,22 @@ app.get('/api/message', (req, res) => {
     res.json({ message: 'Hello from the Backend!' });
 });
 
+// API endpoint to make a request to your server
+app.get('/api/fetch-data', (req, res) => {
+    console.log('Making a request to the server...');
+    
+    // Make a request to your deployed server using axios
+    axios.get('https://your-server-url.com/api/endpoint')
+        .then(response => {
+            console.log('Server response:', response.data);
+            res.json(response.data); // Send server data to the client
+        })
+        .catch(error => {
+            console.error('Error fetching data from server:', error);
+            res.status(500).json({ message: 'Error fetching data from the server' });
+        });
+});
+
 // Telegram Bot Handlers
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
@@ -70,7 +87,7 @@ bot.on('callback_query', (query) => {
 
     if (query.data === 'start_game') {
         bot.sendMessage(chatId, 'Game Started! Let\'s play!');
-        bot.sendMessage(chatId, 'Click below to play the game inside Telegram:', {
+        bot.sendMessage(chatId, 'hi ayush :', {
             reply_markup: {
                 inline_keyboard: [
                     [{
